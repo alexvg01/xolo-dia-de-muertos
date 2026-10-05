@@ -1,0 +1,14 @@
+[client]
+toolbarMode = "minimal"
+
+[theme]
+base = "dark"
+primaryColor = "#D9B4F5"
+backgroundColor = "#1C0D29"
+secondaryBackgroundColor = "#2A1440"
+textColor = "#F5ECFA"
+borderColor = "#4A2C63"
+linkColor = "#D9B4F5"
+baseFontSize = 17
+font = "Alegreya:https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap, Georgia, serif"
+headingFont = "Rozha One:https://fonts.googleapis.com/css2?family=Rozha+One&display=swap, Georgia, serif"
