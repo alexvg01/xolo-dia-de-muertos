@@ -60,8 +60,11 @@ def cargar_conocimiento() -> list[tuple[str, str]]:
         return []
     documentos = []
     for ruta in sorted(CONOCIMIENTO.iterdir(), key=lambda r: r.name.lower()):
-        # Se saltan archivos ocultos y los temporales que Word crea mientras el documento está abierto.
+        # Se saltan archivos ocultos, los temporales que Word crea mientras el documento está abierto
+        # y el README de la carpeta, que es la lista de fuentes para quien visita el repositorio.
         if ruta.name.startswith((".", "~$")) or ruta.suffix.lower() not in EXTENSIONES:
+            continue
+        if ruta.name.lower() == "readme.md":
             continue
         try:
             texto = leer_docx(ruta) if ruta.suffix.lower() == ".docx" else ruta.read_text(encoding="utf-8").strip()

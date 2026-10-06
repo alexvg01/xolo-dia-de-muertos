@@ -2,6 +2,8 @@
 
 Chatbot de un tema hecho con la API de Claude. Responde con base en `instrucciones.txt` y en los documentos de la carpeta `conocimiento/`.
 
+La lista completa de fuentes de conocimiento está en [`conocimiento/README.md`](conocimiento/README.md).
+
 ## Qué hay en la carpeta
 
 | Archivo | Para qué sirve |
@@ -11,7 +13,7 @@ Chatbot de un tema hecho con la API de Claude. Responde con base en `instruccion
 | `estilo.py` | El aspecto de la versión web: papel picado, tipografía, colores y burbujas. |
 | `xolo_base.py` | Lo que comparten las dos: modelo, instrucciones y documentos. |
 | `instrucciones.txt` | Rol, tema, tono y reglas del bot. |
-| `conocimiento/` | Documentos de referencia: `.docx`, `.md` o `.txt`. |
+| `conocimiento/` | Fuentes de conocimiento: el documento base, las notas de referencia y la lista de fuentes. |
 | `requirements.txt` | Dependencias. |
 
 ## Correrlo en tu computadora
@@ -41,7 +43,7 @@ El estilo depende de nombres internos de Streamlit, por eso `requirements.txt` f
 
 Todo lo que hay en la carpeta se manda al modelo en cada mensaje. Eso funciona bien hasta unos cientos de páginas; `xolo_base.py` avisa si te pasas. Con más material hay que cambiar a recuperación por fragmentos (RAG).
 
-Si un documento y las notas de `instrucciones.txt` se contradicen, el bot sigue al documento.
+Si el documento base y las notas de referencia se contradicen, el bot sigue al documento base. Cuando agregues una fuente, anótala también en `conocimiento/README.md`.
 
 ## Publicarlo para que cualquiera lo use
 
