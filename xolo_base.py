@@ -8,7 +8,7 @@ import anthropic
 
 # El modelo más rápido y barato. "claude-sonnet-5-5" razona mejor y cuesta el doble por token.
 MODELO = "claude-haiku-4-5-20251001"
-MAX_TOKENS = 1024    # tope de tokens de cada respuesta
+MAX_TOKENS = 2048    # tope de tokens de cada respuesta
 MAX_MENSAJES = 24    # cuántos mensajes recientes se reenvían en cada llamada
 
 RAIZ = Path(__file__).parent
