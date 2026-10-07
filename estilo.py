@@ -101,7 +101,8 @@ CSS = f"""
 
 /* Lienzo */
 .stApp {{ background: {PAPEL}; }}
-[data-testid="stHeader"] {{ background: transparent; }}
+/* La barra superior de Streamlit (Fork, GitHub, menú) flotaba encima de los mensajes: se oculta. */
+[data-testid="stHeader"] {{ display: none; }}
 .stMain {{ position: relative; }}
 .stMainBlockContainer {{ max-width: 688px; padding: calc(var(--flag-h) + 30px) 20px 28px; }}
 .stMainBlockContainer > [data-testid="stVerticalBlock"] {{ gap: 21.6px; }}
@@ -204,6 +205,9 @@ CSS = f"""
 .st-key-pie {{ gap: 0 22px; }}
 .st-key-pie [data-testid="stCaptionContainer"] {{ opacity: 1; text-align: right; }}
 .st-key-pie [data-testid="stCaptionContainer"] p {{ font-size: 15.2px; color: {TINTA_SUAVE}; }}
+/* En celular, Streamlit Cloud pone su insignia en la esquina inferior derecha: el aviso va a la izquierda. */
+@media (max-width: 640px) {{ .st-key-pie [data-testid="stCaptionContainer"] {{ text-align: left; }} }}
+.xolo-pensando {{ margin: 0; font-size: 17px; font-style: italic; color: {TINTA_SUAVE}; }}
 .st-key-nueva button {{
   min-height: 0; padding: 5.6px 0; border: 0; background: none;
   color: {ENLACE}; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .18em;

@@ -45,18 +45,6 @@ Son versos rimados y satíricos, a modo de epitafio en broma, que presentan como
 Fuentes: National Geographic en Español, "Así nacieron las calaveras literarias mexicanas". https://www.nationalgeographicla.com/historia/2025/10/la-tradicion-del-dia-de-muertos-que-se-burla-de-la-muerte-asi-nacieron-las-calaveras-literarias-mexicanas
 El Informador, "Qué son las calaveras literarias y cómo se escriben" (cita a la Casa Universitaria del Libro de la UNAM). https://www.informador.mx/cultura/Dia-de-Muertos-Que-son-las-calaveras-literarias-y-como-se-escriben-20231025-0087.html
 
-## Celebraciones regionales
-
-- Pomuch, Campeche: las familias sacan los huesos de sus difuntos, los limpian y los vuelven a guardar en su osario.
-- Yucatán: la fiesta se llama Hanal Pixán, "comida de las ánimas" en maya. El 31 de octubre se dedica a los niños, el 1 de noviembre a los adultos y el 2 se hace una misa para las almas, por lo general en el cementerio.
-- Huasteca (norte de Veracruz, San Luis Potosí): la fiesta se llama Xantolo y es la más importante del año en la región.
-- Pátzcuaro y Janitzio, Michoacán: en la Noche de Muertos los pescadores reman hacia la isla de Janitzio con velas encendidas y las familias velan en el panteón.
-- Mixquic, Ciudad de México: en la Alumbrada se encienden cirios y veladoras en el panteón para guiar a las almas.
-
-Fuentes: Milenio, "Ofrendas especiales y limpia de huesos; así celebran Día de Muertos en los estados". https://www.milenio.com/estados/dia-de-muertos-como-se-celebra-en-los-estados-de-mexico
-El Universal, "Día de Muertos: 6 tradiciones asombrosas que se niegan a desaparecer". https://www.eluniversal.com.mx/destinos/dia-de-muertos-6-tradiciones-asombrosas-que-se-niegan-desaparecer/
-El Diario, "Día de Muertos". https://diario.mx/opinion/2025/nov/01/dia-de-muertos-1091956.html
-
 ## Desfile de Día de Muertos de la Ciudad de México
 
 No es una tradición antigua. El primer desfile se hizo en 2016, un año después de que la película de James Bond "Spectre" (2015) mostrara un desfile ficticio en el Centro Histórico.

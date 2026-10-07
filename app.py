@@ -32,6 +32,16 @@ SUGERENCIAS = [
 st.set_page_config(page_title="Xolo, guía de Día de Muertos", page_icon="🏵️")
 
 
+def con_aviso(fragmentos, aviso):
+    """Deja pasar el texto de la respuesta y quita el aviso de "Pensando…" al llegar la primera palabra."""
+    try:
+        for fragmento in fragmentos:
+            aviso.empty()
+            yield fragmento
+    finally:
+        aviso.empty()
+
+
 def clave_api() -> str | None:
     """En Streamlit Community Cloud la clave está en Secrets; en tu computadora, en la variable de entorno."""
     try:
@@ -108,6 +118,8 @@ if pregunta:
 
     respuesta = ""
     with st.chat_message("assistant", avatar=AVATAR["assistant"]):
+        aviso = st.empty()
+        aviso.html('<p class="xolo-pensando">Pensando…</p>')
         try:
             with cliente().messages.stream(
                 model=MODELO,
@@ -115,18 +127,21 @@ if pregunta:
                 system=bloques,                  # instrucciones + documentos (con caché)
                 messages=recientes(historial),   # la API no guarda memoria: va el historial cada vez
             ) as stream:
-                respuesta = st.write_stream(stream.text_stream)
+                respuesta = st.write_stream(con_aviso(stream.text_stream, aviso))
                 final = stream.get_final_message()
             if not (isinstance(respuesta, str) and respuesta.strip()):
                 st.caption("No llegó respuesta. Escribe la pregunta de otra forma.")
             elif final.stop_reason == "max_tokens":
                 st.caption("La respuesta se cortó por longitud. Pide la parte que falta.")
         except anthropic.RateLimitError:
+            aviso.empty()
             st.warning("Xolo está recibiendo muchas preguntas. Espera un momento y vuelve a intentar.")
         except anthropic.APIConnectionError:
+            aviso.empty()
             st.warning("No hubo conexión con la API. Vuelve a intentar en un momento.")
         except anthropic.APIStatusError as error:
             # El detalle va al registro del servidor; al visitante solo se le avisa.
+            aviso.empty()
             print(f"Error {error.status_code} de la API: {detalle(error)}", flush=True)
             st.error(f"Xolo no pudo responder (error {error.status_code}). Vuelve a intentar más tarde.")
 

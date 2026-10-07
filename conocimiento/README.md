@@ -1,12 +1,13 @@
 # Fuentes de conocimiento de Xolo
 
-Xolo responde a partir de tres fuentes, en este orden de prioridad.
+Xolo responde a partir de cuatro fuentes, en este orden de prioridad.
 
 | # | Fuente | Dónde está | Qué aporta |
 |---|---|---|---|
 | 1 | Documento base | [`DIA_DE_MUERTOS.docx`](DIA_DE_MUERTOS.docx) | El contenido principal: historia, ofrenda, calendario de ánimas, la Catrina y el cine. |
 | 2 | Notas de referencia | [`notas_de_referencia.md`](notas_de_referencia.md) | Datos breves que el documento base no cubre, cada uno con su fuente. |
-| 3 | Conocimiento general del modelo | No es un archivo | Lo que el modelo de lenguaje aprendió en su entrenamiento. Solo se usa cuando la respuesta no está en 1 ni en 2. |
+| 3 | Tradiciones por región | [`tradiciones_por_region.md`](tradiciones_por_region.md) | Cómo se vive la fiesta en distintos estados, incluido el norte del país, con la fuente de cada dato. |
+| 4 | Conocimiento general del modelo | No es un archivo | Lo que el modelo de lenguaje aprendió en su entrenamiento. Solo se usa cuando la respuesta no está en las fuentes 1 a 3. |
 
 ## 1. Documento base
 
@@ -37,13 +38,29 @@ Son datos breves redactados para este proyecto a partir de las fuentes siguiente
 | Niveles de la ofrenda | IMER Noticias |
 | La Catrina | INBAL e INAH |
 | Calaveritas literarias | National Geographic en Español; El Informador, que cita a la Casa Universitaria del Libro de la UNAM |
-| Celebraciones regionales | Milenio, El Universal y El Diario |
 | Desfile de la Ciudad de México | El Financiero y Milenio |
 | Alebrijes | UNAM (CEPE, revista Flores de Nieve) e Infobae |
 
-## 3. Conocimiento general del modelo
+## 3. Tradiciones por región
 
-Xolo funciona sobre un modelo de lenguaje, Claude Haiku 4.5, de Anthropic. Cuando una pregunta no se responde con el documento base ni con las notas, el modelo contesta con lo que aprendió en su entrenamiento. Esa parte no tiene una fuente que se pueda citar, y por eso las instrucciones le piden cautela: decir cuando algo varía entre regiones, no inventar fechas ni programas de eventos y reconocer lo que no sabe.
+Reúne lo que se pudo documentar de cada estado o región, con el enlace a la fuente en cada apartado de `tradiciones_por_region.md`. Fuentes consultadas el 5 y el 6 de octubre de 2026. No cubre todos los estados.
+
+| Región | Fuentes |
+|---|---|
+| Panorama del norte y la frontera | EFE, con un investigador de El Colegio de la Frontera Norte; Monterrey Secreto |
+| Nuevo León | Monterrey Secreto, Publimetro, Posta y EFE |
+| Tamaulipas | Milenio y Lifeder |
+| Chihuahua | Luz Noticias y comunicados del Gobierno del Estado de Chihuahua |
+| La Huasteca (Xantolo) | Matador Network, Milenio, Posta y la revista Plasticidad y Restauración Neurológica |
+| Oaxaca | El Financiero |
+| Puebla (Huaquechula) | EFE |
+| Aguascalientes y Estado de México | Chilango |
+| Ciudad de México (Mixquic) | El Diario |
+| Michoacán, Yucatán y Campeche | Milenio y El Universal |
+
+## 4. Conocimiento general del modelo
+
+Xolo funciona sobre un modelo de lenguaje, Claude Haiku 4.5, de Anthropic. Cuando una pregunta no se responde con las fuentes 1 a 3, el modelo contesta con lo que aprendió en su entrenamiento y aclara que ese dato no viene de sus documentos. Esa parte no tiene una fuente que se pueda citar, y por eso las instrucciones le piden cautela: decir cuando algo varía entre regiones, no inventar fechas ni programas de eventos y reconocer lo que no sabe.
 
 ## Lo que Xolo no usa
 
@@ -51,7 +68,7 @@ No busca en internet ni consulta archivos fuera de esta carpeta.
 
 ## Cómo se combinan
 
-En cada mensaje se envían al modelo las instrucciones (`instrucciones.txt`), los archivos de esta carpeta y la conversación. Si el documento base y las notas difieren, Xolo sigue al documento base. Si le preguntan de dónde sale un dato, debe decir de cuál de las tres fuentes viene.
+En cada mensaje se envían al modelo las instrucciones (`instrucciones.txt`), los archivos de esta carpeta y la conversación. Si el documento base y las notas difieren, Xolo sigue al documento base. Si le preguntan de dónde sale un dato, debe decir de cuál de las fuentes viene.
 
 ## Cómo agregar una fuente
 
