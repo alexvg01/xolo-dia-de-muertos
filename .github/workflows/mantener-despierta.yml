@@ -1,0 +1,49 @@
+# Mantiene despierta la app de Xolo en Streamlit Community Cloud.
+#
+# Streamlit duerme las apps gratuitas que pasan 12 horas sin visitas. Esta tarea
+# abre la app cada 4 horas con un navegador automático y, si la encuentra dormida,
+# le da clic al botón para despertarla. No le hace preguntas a Xolo: no gasta
+# créditos de la API.
+#
+# Para apagarla: pestaña Actions del repositorio, elegir esta tarea en la lista
+# de la izquierda, menú "..." y "Disable workflow".
+
+name: Mantener despierta a Xolo
+
+on:
+  schedule:
+    # Cada 4 horas, al minuto 17 (hora UTC). Se evita el minuto 0, que es cuando
+    # GitHub tiene más carga y las tareas programadas se retrasan más.
+    - cron: "17 */4 * * *"
+  workflow_dispatch: {}   # agrega el botón "Run workflow" para correrla a mano
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mantener-despierta
+  cancel-in-progress: false
+
+jobs:
+  visitar:
+    name: Visitar la app
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - name: Bajar el repositorio
+        uses: actions/checkout@v7
+
+      - name: Preparar Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Instalar el navegador automático
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+
+      - name: Visitar la app y despertarla si hace falta
+        env:
+          XOLO_URL: https://xolo-dia-de-muertos.streamlit.app/
+        run: python .github/scripts/despertar.py

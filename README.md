@@ -15,6 +15,8 @@ La lista completa de fuentes de conocimiento está en [`conocimiento/README.md`]
 | `instrucciones.txt` | Rol, tema, tono y reglas del bot. |
 | `conocimiento/` | Fuentes de conocimiento: el documento base, las notas de referencia y la lista de fuentes. |
 | `requirements.txt` | Dependencias. |
+| `docs/index.html` | La página de GitHub Pages, que muestra la app dentro de un marco. |
+| `.github/` | La tarea automática que visita la app para que no se duerma. |
 
 ## Correrlo en tu computadora
 
@@ -57,9 +59,18 @@ Con Streamlit Community Cloud, que es gratis, queda una dirección `https://....
    ```
 4. Despliega y comparte la dirección.
 
-Si nadie la abre en 12 horas, la app se duerme. Quien llegue después la despierta con un botón y tarda un momento en arrancar.
+Si nadie la abre en 12 horas, la app se duerme. Quien llegue después la despierta con un botón y tarda un momento en arrancar. Para que eso casi no pase, el repositorio trae una tarea automática; ver "Mantenerla despierta".
 
 Para cambiar documentos o instrucciones en la versión publicada, sube el cambio a GitHub. Si no lo ves reflejado, reinicia la app desde "Manage app".
+
+## Mantenerla despierta
+
+Streamlit Community Cloud duerme las apps gratuitas que pasan 12 horas sin visitas. Para evitarlo, `.github/workflows/mantener-despierta.yml` le pide a GitHub que cada 4 horas corra `.github/scripts/despertar.py`. Ese script abre la app con un navegador automático y, si la encuentra dormida, le da clic al botón para despertarla. No le hace preguntas a Xolo, así que no gasta créditos de la API.
+
+- **Ver si corrió:** pestaña "Actions" del repositorio, tarea "Mantener despierta a Xolo". Cada corrida dice en su registro si encontró la app despierta o dormida.
+- **Correrla a mano:** en esa misma página, botón "Run workflow".
+- **Apagarla:** en esa misma página, menú "..." y "Disable workflow".
+- **Límites:** GitHub puede retrasar o saltarse corridas programadas, y las desactiva si el repositorio pasa 60 días sin actividad. Antes de una presentación conviene abrir la app a mano.
 
 ## Costo y cuidado del saldo
 
