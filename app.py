@@ -119,7 +119,7 @@ if pregunta:
     respuesta = ""
     with st.chat_message("assistant", avatar=AVATAR["assistant"]):
         aviso = st.empty()
-        aviso.html('<p class="xolo-pensando">Pensando…</p>')
+        estilo.pensando(aviso)   # "Pensando…" y, mientras Xolo responde, la página baja sola
         try:
             with cliente().messages.stream(
                 model=MODELO,
@@ -127,12 +127,15 @@ if pregunta:
                 system=bloques,                  # instrucciones + documentos (con caché)
                 messages=recientes(historial),   # la API no guarda memoria: va el historial cada vez
             ) as stream:
-                respuesta = st.write_stream(con_aviso(stream.text_stream, aviso))
+                # El cursor se ve al final del texto mientras Xolo escribe y desaparece al terminar.
+                respuesta = st.write_stream(con_aviso(stream.text_stream, aviso), cursor=estilo.CURSOR)
                 final = stream.get_final_message()
             if not (isinstance(respuesta, str) and respuesta.strip()):
                 st.caption("No llegó respuesta. Escribe la pregunta de otra forma.")
             elif final.stop_reason == "max_tokens":
                 st.caption("La respuesta se cortó por longitud. Pide la parte que falta.")
+            else:
+                estilo.listo()   # marca que la respuesta ya terminó
         except anthropic.RateLimitError:
             aviso.empty()
             st.warning("Xolo está recibiendo muchas preguntas. Espera un momento y vuelve a intentar.")

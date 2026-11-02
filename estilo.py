@@ -208,6 +208,11 @@ CSS = f"""
 /* En celular, Streamlit Cloud pone su insignia en la esquina inferior derecha: el aviso va a la izquierda. */
 @media (max-width: 640px) {{ .st-key-pie [data-testid="stCaptionContainer"] {{ text-align: left; }} }}
 .xolo-pensando {{ margin: 0; font-size: 17px; font-style: italic; color: {TINTA_SUAVE}; }}
+/* Marca que aparece debajo de la respuesta cuando Xolo terminó de escribir */
+.xolo-listo {{ margin: 2px 0 0; font-size: 15.2px; color: {TINTA_SUAVE}; animation: xolo-aparecer .5s ease-out both; }}
+.xolo-listo span {{ margin-right: 6px; color: {CEMPASUCHIL}; font-weight: 700; }}
+@keyframes xolo-aparecer {{ from {{ opacity: 0; transform: translateY(3px); }} to {{ opacity: 1; transform: none; }} }}
+@media (prefers-reduced-motion: reduce) {{ .xolo-listo {{ animation: none; }} }}
 .st-key-nueva button {{
   min-height: 0; padding: 5.6px 0; border: 0; background: none;
   color: {ENLACE}; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .18em;
@@ -225,3 +230,51 @@ def aplicar() -> None:
 
 def encabezado(titulo: str, bajada: str) -> None:
     st.html(f'<h1 class="xolo-titulo">{titulo}</h1><p class="xolo-bajada">{bajada}</p>')
+
+
+# Se ve al final del texto mientras Xolo escribe (lo pinta st.write_stream) y desaparece al terminar.
+CURSOR = ":orange[▍]"
+
+# Baja la página mientras Xolo responde. Si la persona sube para leer, la deja en paz; si
+# regresa hasta abajo, vuelve a seguir el texto. Se apaga sola cuando Streamlit termina.
+_SEGUIR = """<script>
+(() => {
+  const app = document.querySelector('[data-testid="stApp"]');
+  const main = document.querySelector('[data-testid="stMain"]');
+  if (!app || !main) return;
+  let seguir = true;
+  const enElFinal = () => main.scrollHeight - main.clientHeight - main.scrollTop < 48;
+  const soltar = (e) => { if (!(e.type === "wheel" && e.deltaY > 0)) seguir = false; };
+  const teclas = (e) => { if (["ArrowUp", "PageUp", "Home"].includes(e.key)) seguir = false; };
+  const revisar = () => { if (enElFinal()) seguir = true; };
+  main.addEventListener("wheel", soltar, { passive: true });
+  main.addEventListener("touchmove", soltar, { passive: true });
+  main.addEventListener("scroll", revisar, { passive: true });
+  window.addEventListener("keydown", teclas);
+  const inicio = Date.now();
+  let quieto = 0;
+  const paso = () => {
+    if (seguir) main.scrollTop = main.scrollHeight;
+    quieto = app.dataset.testScriptState === "running" ? 0 : quieto + 1;
+    if (quieto > 30 || Date.now() - inicio > 180000) {
+      main.removeEventListener("wheel", soltar);
+      main.removeEventListener("touchmove", soltar);
+      main.removeEventListener("scroll", revisar);
+      window.removeEventListener("keydown", teclas);
+      return;
+    }
+    requestAnimationFrame(paso);
+  };
+  requestAnimationFrame(paso);
+})();
+</script>"""
+
+
+def pensando(lugar) -> None:
+    """Escribe "Pensando…" en `lugar` y arranca el script que baja la página mientras llega la respuesta."""
+    lugar.html('<p class="xolo-pensando">Pensando…</p>' + _SEGUIR, unsafe_allow_javascript=True)
+
+
+def listo() -> None:
+    """Línea discreta debajo de una respuesta: indica que Xolo ya terminó de escribir."""
+    st.html('<p class="xolo-listo"><span aria-hidden="true">✓</span>Respuesta completa</p>')
