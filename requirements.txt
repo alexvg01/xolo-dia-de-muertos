@@ -1,3 +1,10 @@
 anthropic>=1.11,<2
 streamlit==1.65.0
 python-docx>=1.2,<2
+
+# Paquetes que Streamlit instala por su cuenta. Se fijan en las versiones que funcionaban
+# antes del 3 de noviembre de 2026: ese día, después de reinstalarse con versiones nuevas,
+# la app empezó a trabarse al cargar en Streamlit Community Cloud.
+anyio==4.15.1
+python-multipart==0.0.32
+python-dateutil==3.0.0
