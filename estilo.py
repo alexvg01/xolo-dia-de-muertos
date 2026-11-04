@@ -219,31 +219,58 @@ CSS = f"""
 }}
 .st-key-nueva button p {{ font-size: 15.2px; font-weight: 700; }}
 .st-key-nueva button:hover, .st-key-nueva button:focus {{ color: {ENLACE}; text-decoration-color: {CEMPASUCHIL}; background: none; }}
-
-/* "Ver instrucciones": el mismo estilo de enlace que "Conversación nueva" */
-.st-key-pie-enlaces {{ gap: 0 20px; width: auto; flex: 0 0 auto; }}
-.st-key-ver button {{
-  min-height: 0; padding: 5.6px 0; border: 0; background: none;
-  color: {ENLACE}; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .18em;
-}}
-.st-key-ver button p {{ font-size: 15.2px; font-weight: 700; }}
-.st-key-ver button:hover, .st-key-ver button:focus {{ color: {ENLACE}; text-decoration-color: {CEMPASUCHIL}; background: none; }}
-
-/* Panel de instrucciones (solo lectura) */
-.xolo-instr-intro {{ margin: 0 0 14px; font-size: 16px; line-height: 1.5; color: {TINTA}; }}
-.xolo-instr-box {{
-  max-height: 55vh; overflow-y: auto;
-  padding: 15px 17px; border: 1px solid {LINEA}; border-radius: 12px;
-  background: {PAPEL};
-  white-space: pre-wrap; font-size: 15px; line-height: 1.6; color: {TINTA};
-}}
-.xolo-instr-nota {{ margin: 14px 0 2px; font-size: 13.5px; line-height: 1.5; color: {TINTA_SUAVE}; }}
-.xolo-instr-nota code, .xolo-instr-box code {{ font-size: .92em; }}
 """
 
 
+# A veces el servidor de Streamlit Community Cloud se cuelga al entregar un archivo de su
+# propia interfaz, y el navegador muestra "Failed to fetch dynamically imported module": la
+# app queda a medias (por ejemplo, sin caja de escritura). Como el cuelgue es intermitente,
+# este script detecta ese error y recarga la página una o dos veces; casi siempre la siguiente
+# carga sí trae todo. No arregla el servidor, solo evita que el visitante se quede en el error.
+# En un hosting sin cuelgues (como Posit) nunca se dispara.
+_REINTENTO = """<script>
+(() => {
+  try {
+    const CLAVE = "xoloReintentos", MAX = 3;
+    let listo = false, pendiente = false;
+    const n = () => { try { return parseInt(sessionStorage.getItem(CLAVE) || "0", 10) || 0; } catch (e) { return 0; } };
+    const set = (v) => { try { sessionStorage.setItem(CLAVE, String(v)); } catch (e) {} };
+    const esChunk = (m) => typeof m === "string" &&
+      /Failed to fetch dynamically imported module|error loading dynamically imported module|Importing a module script failed/i.test(m);
+    const recargar = () => {
+      if (listo || pendiente) return;
+      pendiente = true;
+      if (n() >= MAX) return;        // ya lo intentamos varias veces: mejor mostrar el error
+      set(n() + 1);
+      setTimeout(() => location.reload(), 1000);
+    };
+    window.addEventListener("error", (e) => {
+      const m = (e && (e.message || (e.error && e.error.message))) || "";
+      if (esChunk(m)) recargar();
+    }, true);
+    window.addEventListener("unhandledrejection", (e) => {
+      const r = e && e.reason;
+      const m = (r && (r.message || ("" + r))) || "";
+      if (esChunk(m)) recargar();
+    });
+    // Cuando aparece la caja de escritura, la app cargó completa: se limpia el contador y se
+    // desarma el vigía. Si en 20 s no apareció, se asume un archivo colgado y se recarga.
+    const inicio = Date.now();
+    const iv = setInterval(() => {
+      if (document.querySelector('[data-testid="stChatInput"]')) {
+        listo = true; set(0); clearInterval(iv);
+      } else if (Date.now() - inicio > 20000) {
+        clearInterval(iv); recargar();
+      }
+    }, 500);
+  } catch (e) {}
+})();
+</script>"""
+
+
 def aplicar() -> None:
-    """Inyecta el CSS y la tira de papel picado. Se llama una vez, al inicio de app.py."""
+    """Inyecta el autorreintento, el CSS y la tira de papel picado. Se llama una vez, al inicio de app.py."""
+    st.html(_REINTENTO, unsafe_allow_javascript=True)
     st.html(f"<style>{CSS}</style>")
     st.html('<div class="xolo-papel" aria-hidden="true">' + "<span></span>" * 32 + "</div>")
 
@@ -298,19 +325,3 @@ def pensando(lugar) -> None:
 def listo() -> None:
     """Línea discreta debajo de una respuesta: indica que Xolo ya terminó de escribir."""
     st.html('<p class="xolo-listo"><span aria-hidden="true">✓</span>Respuesta completa</p>')
-
-
-def panel_instrucciones(instrucciones: str, documentos: list[str]) -> None:
-    """Muestra, de solo lectura, el texto que define a Xolo. No deja editarlo ni afecta al bot."""
-    import html as _html
-
-    docs = ", ".join(documentos) if documentos else "ninguno"
-    st.html(
-        '<p class="xolo-instr-intro">Esto es lo que convierte a un modelo general en Xolo: '
-        "define su tema, su tono, sus límites y cómo usa sus fuentes.</p>"
-        f'<div class="xolo-instr-box">{_html.escape(instrucciones)}</div>'
-        '<p class="xolo-instr-nota">En la app, este texto viaja en el parámetro '
-        "<code>system</code> de la API en cada consulta, junto con los documentos de "
-        f"referencia ({_html.escape(docs)}). Es de solo lectura: para cambiarlo se edita "
-        "<code>instrucciones.txt</code> en el repositorio.</p>"
-    )

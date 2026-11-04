@@ -71,16 +71,10 @@ if not clave_api():
     st.error("Xolo no está configurado: falta la clave ANTHROPIC_API_KEY.")
     st.stop()
 try:
-    bloques, documentos = sistema(huella())
+    bloques, _ = sistema(huella())
 except ErrorDeConfiguracion as error:
     st.error(str(error))
     st.stop()
-
-
-@st.dialog("Instrucciones de Xolo", width="large", position="right")
-def ver_instrucciones() -> None:
-    # bloques[0] es el bloque de instrucciones; documentos, los nombres de los archivos de conocimiento.
-    estilo.panel_instrucciones(bloques[0]["text"], documentos)
 
 historial: list[dict] = st.session_state.setdefault("historial", [])
 # Tope por sesión: las respuestas las paga tu clave.
@@ -90,12 +84,9 @@ limite = sum(1 for m in historial if m["role"] == "user") >= MAX_PREGUNTAS
 with st.bottom:
     escrita = st.chat_input("Escribe tu pregunta…", max_chars=MAX_CARACTERES, disabled=limite)
     with st.container(key="pie", horizontal=True, horizontal_alignment="distribute", vertical_alignment="center"):
-        with st.container(key="pie-enlaces", horizontal=True, vertical_alignment="center"):
-            if st.button("Ver instrucciones", key="ver", type="tertiary"):
-                ver_instrucciones()
-            if st.button("Conversación nueva", key="nueva", type="tertiary"):
-                st.session_state.historial = []
-                st.rerun()
+        if st.button("Conversación nueva", key="nueva", type="tertiary"):
+            st.session_state.historial = []
+            st.rerun()
         st.caption("Xolo es una IA y puede equivocarse.")
 
 # Saludo fijo de Xolo; las preguntas sugeridas solo aparecen antes del primer mensaje.
