@@ -219,6 +219,26 @@ CSS = f"""
 }}
 .st-key-nueva button p {{ font-size: 15.2px; font-weight: 700; }}
 .st-key-nueva button:hover, .st-key-nueva button:focus {{ color: {ENLACE}; text-decoration-color: {CEMPASUCHIL}; background: none; }}
+
+/* "Ver instrucciones": el mismo estilo de enlace que "Conversación nueva" */
+.st-key-pie-enlaces {{ gap: 0 20px; width: auto; flex: 0 0 auto; }}
+.st-key-ver button {{
+  min-height: 0; padding: 5.6px 0; border: 0; background: none;
+  color: {ENLACE}; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: .18em;
+}}
+.st-key-ver button p {{ font-size: 15.2px; font-weight: 700; }}
+.st-key-ver button:hover, .st-key-ver button:focus {{ color: {ENLACE}; text-decoration-color: {CEMPASUCHIL}; background: none; }}
+
+/* Panel de instrucciones (solo lectura) */
+.xolo-instr-intro {{ margin: 0 0 14px; font-size: 16px; line-height: 1.5; color: {TINTA}; }}
+.xolo-instr-box {{
+  max-height: 55vh; overflow-y: auto;
+  padding: 15px 17px; border: 1px solid {LINEA}; border-radius: 12px;
+  background: {PAPEL};
+  white-space: pre-wrap; font-size: 15px; line-height: 1.6; color: {TINTA};
+}}
+.xolo-instr-nota {{ margin: 14px 0 2px; font-size: 13.5px; line-height: 1.5; color: {TINTA_SUAVE}; }}
+.xolo-instr-nota code, .xolo-instr-box code {{ font-size: .92em; }}
 """
 
 
@@ -278,3 +298,19 @@ def pensando(lugar) -> None:
 def listo() -> None:
     """Línea discreta debajo de una respuesta: indica que Xolo ya terminó de escribir."""
     st.html('<p class="xolo-listo"><span aria-hidden="true">✓</span>Respuesta completa</p>')
+
+
+def panel_instrucciones(instrucciones: str, documentos: list[str]) -> None:
+    """Muestra, de solo lectura, el texto que define a Xolo. No deja editarlo ni afecta al bot."""
+    import html as _html
+
+    docs = ", ".join(documentos) if documentos else "ninguno"
+    st.html(
+        '<p class="xolo-instr-intro">Esto es lo que convierte a un modelo general en Xolo: '
+        "define su tema, su tono, sus límites y cómo usa sus fuentes.</p>"
+        f'<div class="xolo-instr-box">{_html.escape(instrucciones)}</div>'
+        '<p class="xolo-instr-nota">En la app, este texto viaja en el parámetro '
+        "<code>system</code> de la API en cada consulta, junto con los documentos de "
+        f"referencia ({_html.escape(docs)}). Es de solo lectura: para cambiarlo se edita "
+        "<code>instrucciones.txt</code> en el repositorio.</p>"
+    )

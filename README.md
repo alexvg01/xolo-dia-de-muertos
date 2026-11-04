@@ -1,5 +1,7 @@
 # Xolo, chatbot de Día de Muertos
 
+**▶️ Probar Xolo en vivo:** **https://alexvg01-xolo-dia-de-muertos.share.connect.posit.cloud/**
+
 Chatbot de un tema hecho con la API de Claude. Responde con base en `instrucciones.txt` y en los documentos de la carpeta `conocimiento/`.
 
 La lista completa de fuentes de conocimiento está en [`conocimiento/README.md`](conocimiento/README.md).
